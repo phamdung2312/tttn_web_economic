@@ -162,6 +162,8 @@ const ProductsPage = () => {
       ) : (
         <div>
           <Header activeHeading={3} />
+
+          {/*all method filter */}
           <div
             style={searchDataFilter || categoryData ? { display: "flex" } : {}}
             className="conatainer_input_price bg-gray-100 p-4 rounded-lg shadow-md hidden">
