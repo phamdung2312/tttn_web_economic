@@ -11,3 +11,6 @@
 .conatainer_body_text {
   padding: 0 8px 4px 0;
 }
+.searchValue {
+  display: none;
+}

@@ -207,10 +207,8 @@ const UserInbox = () => {
       {!open && (
         <>
           <Header />
-          <h1 className="text-center text-[30px] py-3 font-Poppins">
-            Tất cả tin nhắn
-          </h1>
-          {/* All messages list */}
+          <h1 className="text-center text-[30px] py-3 font-Poppins"></h1>
+
           {conversations &&
             conversations.map((item, index) => (
               <MessageList
@@ -279,6 +277,8 @@ const MessageList = ({
     };
     getUser();
   }, [me, data]);
+  console.log("dataID", data._id);
+  console.log("res.data.shop)", user);
 
   return (
     <div
