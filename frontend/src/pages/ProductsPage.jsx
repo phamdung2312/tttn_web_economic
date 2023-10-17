@@ -28,19 +28,16 @@ const ProductsPage = () => {
   const searchDataFilter = useSelector((state) => state?.search.searchData);
   const searchValue = useSelector((state) => state?.search.searchValue);
   // const searchDataFilter = searchData?.search?.searchData;
-  console.log("searchValue", searchValue);
-  console.log("data", data);
-  console.log("datatemp", datatemp);
-  console.log("searchDataFilter", searchDataFilter);
-  console.log("category", category);
-  console.log("categoryDataTest", categoryData);
+  // console.log("searchValue", searchValue);
+  // console.log("data", data);
+  // console.log("datatemp", datatemp);
+  // console.log("searchDataFilter", searchDataFilter);
+  // console.log("category", category);
+  // console.log("categoryDataTest", categoryData);
 
-  const handleMinPriceChange = (value) => {
-    setMinPrice(value);
-  };
-
-  const handleMaxPriceChange = (value) => {
-    setMaxPrice(value);
+  const handlePriceChange = (value) => {
+    setMinPrice(value[0]);
+    setMaxPrice(value[1]);
   };
 
   const handleProvinceChange = (selectedValue) => {
@@ -168,24 +165,7 @@ const ProductsPage = () => {
             style={searchDataFilter || categoryData ? { display: "flex" } : {}}
             className="conatainer_input_price bg-gray-100 p-4 rounded-lg shadow-md hidden">
             <div className="conatainer_body_price">
-              <label className="conatainer_body_text">Giá thấp nhất: </label>
-              <RangeSlider
-                value={minPrice}
-                min={0}
-                max={100000000}
-                onChange={handleMinPriceChange}
-                className="w-full"
-              />
-            </div>
-            <div className="conatainer_body_price">
-              <label className="conatainer_body_text">Giá cao nhất: </label>
-              <RangeSlider
-                value={maxPrice}
-                min={0}
-                max={100000000}
-                onChange={handleMaxPriceChange}
-                className="w-full"
-              />
+              <RangeSlider onChange={handlePriceChange} className="w-full" />
             </div>
             <div className="conatainer_body_price">
               <label className="conatainer_body_text">Tỉnh/Thành phố: </label>

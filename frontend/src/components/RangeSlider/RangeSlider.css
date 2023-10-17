@@ -1,6 +1,6 @@
 .range-slider {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   height: 80px;
 }
@@ -22,7 +22,35 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   cursor: pointer;
 }
-.range-slider__value {
+.range-slider__valueMax,
+.range-slider__valueMin {
   display: inline-block;
   margin-left: 10px;
+  width: 90px;
+}
+.range-slider__valueMin {
+  text-align: right;
+  margin-right: 10px;
+}
+.slide {
+  background-color: blue;
+  height: 5px;
+  width: 150px;
+  border-radius: 5px;
+}
+
+.example-thumb {
+  bottom: -5px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #007bff;
+}
+
+.thumb-0 {
+  bottom: -5px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #007bff;
 }
