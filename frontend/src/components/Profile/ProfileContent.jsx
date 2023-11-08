@@ -263,8 +263,8 @@ const AllOrders = () => {
 
     {
       field: " ",
-      flex: 1,
-      minWidth: 150,
+      flex: 0.3,
+      minWidth: 50,
       headerName: "",
       type: "number",
       sortable: false,
@@ -387,8 +387,8 @@ const AllRefundOrders = () => {
 
     {
       field: " ",
-      flex: 1,
-      minWidth: 150,
+      flex: 0.3,
+      minWidth: 50,
       headerName: "",
       type: "number",
       sortable: false,
@@ -509,8 +509,8 @@ const TrackOrder = () => {
 
     {
       field: " ",
-      flex: 1,
-      minWidth: 150,
+      flex: 0.3,
+      minWidth: 50,
       headerName: "",
       type: "number",
       sortable: false,

@@ -60,7 +60,9 @@ const ProductCard = ({ data, isEvent }) => {
         toast.error("Sản phẩm hiện hết hàng!");
       } else {
         if (isNameShop) {
-          toast.error("Giỏ hàng k tiếp nhận sản  phẩm khác shop");
+          toast.error(
+            "Vui lòng thanh toán sản phẩm trong giỏ hàng trước khi thêm sản phẩm của cửa hàng khác"
+          );
         } else {
           const cartData = { ...data, qty: 1 };
           dispatch(addTocart(cartData));
@@ -154,7 +156,7 @@ const ProductCard = ({ data, isEvent }) => {
               className="cursor-pointer absolute right-2 top-5"
               onClick={() => removeFromWishlistHandler(data)}
               color={click ? "red" : "#333"}
-              title="Remove from wishlist"
+              title="Xóa khỏi danh mục yêu thích"
             />
           ) : (
             <AiOutlineHeart
@@ -162,7 +164,7 @@ const ProductCard = ({ data, isEvent }) => {
               className="cursor-pointer absolute right-2 top-5"
               onClick={() => addToWishlistHandler(data)}
               color={click ? "red" : "#333"}
-              title="Add to wishlist"
+              title="Thêm vào danh mục yêu thích"
             />
           )}
           <AiOutlineEye
@@ -170,14 +172,14 @@ const ProductCard = ({ data, isEvent }) => {
             className="cursor-pointer absolute right-2 top-14"
             onClick={() => setOpen(!open)}
             color="#333"
-            title="Quick view"
+            title="Xem nhanh"
           />
           <AiOutlineShoppingCart
             size={25}
             className="cursor-pointer absolute right-2 top-24"
             onClick={() => addToCartHandler(data._id, data.shop.name)}
             color="#444"
-            title="Add to cart"
+            title="Thêm vào giỏ hàng"
           />
           {open ? <ProductDetailsCard setOpen={setOpen} data={data} /> : null}
         </div>

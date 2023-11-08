@@ -27,21 +27,32 @@ const TrackOrder = () => {
     { status: "Delivered", icon: "️🎯" },
   ];
 
-  // Lọc ra bước tiến trình mà đơn hàng đã đạt được
-  const currentStatusIndex = orderSteps.findIndex(
-    (step) => step.status === data?.status
-  );
+  const refundSteps = [
+    { status: "Processing refund", icon: "⭕" },
+    { status: "Refund Success", icon: "♻️" },
+  ];
 
+  // Lọc ra bước tiến trình mà đơn hàng đã đạt được
+  const currentStatusIndex =
+    data?.status === "Processing refund" || data?.status === "Refund Success"
+      ? refundSteps.findIndex((step) => step.status === data?.status)
+      : orderSteps.findIndex((step) => step.status === data?.status);
 
   return (
     <div className={`py-4 min-h-screen ${styles.section}`}>
-
       <div className="w-full flex items-center justify-between pt-6">
         <h5 className="text-[#00000084]">
           Mã đơn hàng: <span>#{data?._id?.slice(0, 8)}</span>
         </h5>
         <h5 className="text-[#00000084]">
-          Ngày đặt: <span>{data?.createdAt?.slice(0, 10)}</span>
+          Ngày đặt:{" "}
+          <span>
+            {new Date(data?.createdAt).toLocaleString("vi-VN", {
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
+            })}
+          </span>
         </h5>
       </div>
 
@@ -86,45 +97,81 @@ const TrackOrder = () => {
       {/* Hiển thị tiến trình tình trạng đơn hàng */}
       <div className="w-full mt-6">
         <h1 className="pl-2 text-[25px]">
-          <span role="img" aria-label="Tiến trình đơn hàng">🚚</span> Trạng thái đơn hàng:
+          <span role="img" aria-label="Tiến trình đơn hàng">
+            🚚
+          </span>{" "}
+          Trạng thái đơn hàng:
         </h1>
         {/* Thêm danh sách mô tả trạng thái */}
         <ul className="list-none pl-8 pt-4 space-y-4">
-          {orderSteps.map((step, index) => (
-            <li
-              key={index}
-              className={`flex items-center space-x-4 text-[#00000084] ${index < currentStatusIndex
-                ? "text-[#000000] font-bold"
-                : index === currentStatusIndex
-                  ? "text-[#00cc00] font-bold bg-gray-200 border border-gray-400"
-                  : ""
-                }`}
-            >
-              <div className="flex items-center">
-                <span className="text-[#000000] text-2xl mr-2">{step.icon}</span>
-                <span className="text-lg">{step.status}</span>
-              </div>
-              {index === currentStatusIndex && (
-                <span className="ml-auto text-[#00000084]">
-                  {data?.status === "Delivered"
-                    ? new Date(data?.deliveredAt).toLocaleString("vi-VN", {
-                      year: "numeric",
-                      month: "numeric",
-                      day: "numeric",
-                      hour: "numeric",
-                      minute: "numeric",
-                    })
-                    : new Date(data?.createdAt).toLocaleString("vi-VN", {
-                      year: "numeric",
-                      month: "numeric",
-                      day: "numeric",
-                      hour: "numeric",
-                      minute: "numeric",
-                    })}
-                </span>
-              )}
-            </li>
-          ))}
+          {data?.status === "Processing refund" ||
+          data?.status === "Refund Success"
+            ? refundSteps.map((step, index) => (
+                <li
+                  key={index}
+                  className={`flex items-center space-x-4 text-[#00000084] ${
+                    index < currentStatusIndex
+                      ? "text-[#000000] font-bold"
+                      : index === currentStatusIndex
+                      ? "text-[#00cc00] font-bold bg-gray-200 border border-gray-400"
+                      : ""
+                  }`}>
+                  <div className="flex items-center">
+                    <span className="text-[#000000] text-2xl mr-2">
+                      {step.icon}
+                    </span>
+                    <span className="text-lg">{step.status}</span>
+                  </div>
+                  {index === currentStatusIndex && (
+                    <span className="ml-auto text-[#00000084]">
+                      {new Date(data?.deliveredAt).toLocaleString("vi-VN", {
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                      })}
+                    </span>
+                  )}
+                </li>
+              ))
+            : orderSteps.map((step, index) => (
+                <li
+                  key={index}
+                  className={`flex items-center space-x-4 text-[#00000084] ${
+                    index < currentStatusIndex
+                      ? "text-[#000000] font-bold"
+                      : index === currentStatusIndex
+                      ? "text-[#00cc00] font-bold bg-gray-200 border border-gray-400"
+                      : ""
+                  }`}>
+                  <div className="flex items-center">
+                    <span className="text-[#000000] text-2xl mr-2">
+                      {step.icon}
+                    </span>
+                    <span className="text-lg">{step.status}</span>
+                  </div>
+                  {index === currentStatusIndex && (
+                    <span className="ml-auto text-[#00000084]">
+                      {data?.status === "Delivered"
+                        ? new Date(data?.deliveredAt).toLocaleString("vi-VN", {
+                            year: "numeric",
+                            month: "numeric",
+                            day: "numeric",
+                            hour: "numeric",
+                            minute: "numeric",
+                          })
+                        : new Date(data?.createdAt).toLocaleString("vi-VN", {
+                            year: "numeric",
+                            month: "numeric",
+                            day: "numeric",
+                            hour: "numeric",
+                            minute: "numeric",
+                          })}
+                    </span>
+                  )}
+                </li>
+              ))}
         </ul>
       </div>
     </div>

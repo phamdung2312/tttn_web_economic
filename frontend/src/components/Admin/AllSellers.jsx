@@ -10,10 +10,11 @@ import { backend_url, server } from "../../server";
 import { toast } from "react-toastify";
 import { getAllSellers } from "../../redux/actions/sellers";
 import { Link } from "react-router-dom";
-import ChartComponentSeller from "./ChartComponentSeller";
+import ChartComponentAdmin from "./ChartComponentAdmin";
 const AllSellers = () => {
   const [valStartDay, setValStartDay] = useState("");
   const [valEndDay, setValEndDay] = useState("");
+  const [statistic, setStatistic] = useState(false);
   const dispatch = useDispatch();
   const { sellers } = useSelector((state) => state.seller);
   const [open, setOpen] = useState(false);
@@ -43,7 +44,12 @@ const AllSellers = () => {
   const handleStartDayClick = () => {
     setValEndDay("");
     setValStartDay("");
+    setStatistic(false);
   };
+  const handleStatistic = () => {
+    setStatistic(true);
+  };
+
   const getAllSeller = sellers?.filter((item) => {
     const orderDate = new Date(item.createdAt.slice(0, 10));
     return (
@@ -54,7 +60,7 @@ const AllSellers = () => {
   const deliveredOrdersInfo = getAllSeller?.map((order) => {
     return {
       day: order.createdAt.slice(0, 10),
-      totalOder: 1,
+      total: 1,
     };
   });
   const totalSeller = getAllSeller?.length;
@@ -224,23 +230,46 @@ const AllSellers = () => {
               paddingBottom: "30px",
               background: "#ccc",
             }}>
-            {valEndDay ? (
+            {statistic ? (
               <button
                 onClick={handleStartDayClick}
-                style={{ color: "#294fff", fontSize: "20px" }}>
+                style={{
+                  color: "#294fff",
+                  fontSize: "20px",
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                }}>
                 Tiếp tục thống kê
               </button>
             ) : (
               <></>
             )}
+            {valEndDay ? (
+              <button
+                onClick={handleStatistic}
+                style={{
+                  color: "#294fff",
+                  fontSize: "20px",
+                  display: statistic ? "none" : "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                }}>
+                Thống kê
+              </button>
+            ) : (
+              <></>
+            )}
           </div>
-          <DataGrid
-            rows={row1}
-            columns={columns}
-            pageSize={5}
-            disableSelectionOnClick
-            autoHeight
-          />
+          {statistic && (
+            <DataGrid
+              rows={row1}
+              columns={columns}
+              pageSize={5}
+              disableSelectionOnClick
+              autoHeight
+            />
+          )}
           <div
             style={{
               fontSize: "20px",
@@ -248,15 +277,18 @@ const AllSellers = () => {
               padding: "50px",
               float: "right",
             }}>
-            <span>Tổng số lượng người bán: </span>
-            <span style={{ color: "#294fff" }}>{totalSeller}</span>
+            {statistic && (
+              <div>
+                <span>Tổng số lượng người bán: </span>
+                <span style={{ color: "#294fff" }}>{totalSeller}</span>
+              </div>
+            )}
           </div>
 
-          {valEndDay && (
-            <ChartComponentSeller
-              arrData={
-                deliveredOrdersInfo && deliveredOrdersInfo
-              }></ChartComponentSeller>
+          {statistic && (
+            <ChartComponentAdmin
+              arrData={deliveredOrdersInfo && deliveredOrdersInfo}
+              name="người bán"></ChartComponentAdmin>
           )}
         </div>
         {open && (

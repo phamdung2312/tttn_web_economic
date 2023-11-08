@@ -9,6 +9,7 @@ import { getAllProductsShop } from "../../redux/actions/product";
 import { Button } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import { Element, Link as ScrollLink } from "react-scroll";
+import ChartComponentShop from "./ChartComponentShop";
 
 const DashboardHero = () => {
   const dispatch = useDispatch();
@@ -17,8 +18,9 @@ const DashboardHero = () => {
   const { products } = useSelector((state) => state.products);
   const [valStartDay, setValStartDay] = useState("");
   const [valEndDay, setValEndDay] = useState("");
+  const [statistic, setStatistic] = useState(false);
   const targetRef = useRef();
-  console.log("orders", orders);
+  console.log("seller", seller);
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
     dispatch(getAllProductsShop(seller._id));
@@ -29,7 +31,7 @@ const DashboardHero = () => {
       style: "currency",
       currency: "VND",
     }) + "";
-
+  console.log("availableBalance", availableBalance);
   const scrollToTarget = () => {
     targetRef.current.scrollIntoView({ behavior: "smooth" });
   };
@@ -40,6 +42,15 @@ const DashboardHero = () => {
   const handleEndDayChange = (e) => {
     setValEndDay(e.target.value);
   };
+  const handleStartDayClick = () => {
+    setValEndDay("");
+    setValStartDay("");
+    setStatistic(false);
+  };
+  const handleStatistic = () => {
+    setStatistic(true);
+  };
+
   const getAllProducts = orders?.filter((item) => {
     const orderDate = new Date(item.createdAt.slice(0, 10));
     return (
@@ -49,11 +60,22 @@ const DashboardHero = () => {
     );
   });
 
+  //chart (save in arr with 2 key day and price)
+  console.log("getAllProducts", getAllProducts);
+  const deliveredOrdersInfo = getAllProducts?.map((order) => {
+    return {
+      day: order.deliveredAt.slice(0, 10),
+      total: order.totalPrice - order.totalPrice * 0.1,
+    };
+  });
+  console.log("deliveredOrdersInfo", deliveredOrdersInfo);
+  //
   const sumOder = getAllProducts?.reduce((total, item) => {
     return total + item.totalPrice;
   }, 0);
   const totalRevenue = sumOder - sumOder * 0.1;
   console.log("sumOder", sumOder);
+  console.log("getAllProducts", getAllProducts);
   const columns = [
     { field: "id", headerName: "Mã đơn hàng", minWidth: 150, flex: 0.7 },
 
@@ -190,47 +212,90 @@ const DashboardHero = () => {
         <Element
           name="target"
           style={{
-            display: "flex",
-            justifyContent: "space-between",
             padding: "20px",
             background: "#ccc",
           }}>
-          <h1 style={{ fontSize: "20px", fontWeight: "700" }}>
-            Thống kê doanh thu----
-          </h1>
-          <div>
-            <label>Ngày bắt đầu: </label>
-            <input
-              style={{ border: "1px solid black" }}
-              value={valStartDay}
-              type="date"
-              onChange={handleStartDayChange}></input>
-            <label style={{ marginLeft: "50px" }}>Ngày kết thúc: </label>
-            <input
-              style={{ border: "1px solid black" }}
-              className="border border-solid border-red-500"
-              type="date"
-              value={valEndDay}
-              onChange={handleEndDayChange}></input>
-          </div>
           <div
             style={{
-              fontSize: "20px",
-              fontWeight: "700",
-              padding: "50px",
-              float: "right",
-              display: "inline-block",
+              display: "flex",
+              justifyContent: "space-between",
             }}>
-            <span>Tổng doanh thu: </span>
-            <span style={{ color: "#294fff" }}>
-              {totalRevenue?.toLocaleString("vi-VN", {
-                style: "currency",
-                currency: "VND",
-              }) + ""}
-            </span>
+            <h1 style={{ fontSize: "20px", fontWeight: "700" }}>
+              Thống kê doanh thu----
+            </h1>
+            <div>
+              <label>Ngày bắt đầu: </label>
+              <input
+                style={{ border: "1px solid black" }}
+                value={valStartDay}
+                type="date"
+                onChange={handleStartDayChange}></input>
+              <label style={{ marginLeft: "50px" }}>Ngày kết thúc: </label>
+              <input
+                style={{ border: "1px solid black" }}
+                className="border border-solid border-red-500"
+                type="date"
+                value={valEndDay}
+                onChange={handleEndDayChange}></input>
+            </div>
+            <div
+              style={{
+                fontSize: "20px",
+                fontWeight: "700",
+                padding: "50px",
+                float: "right",
+                display: "inline-block",
+              }}>
+              <span>Tổng doanh thu: </span>
+              <span style={{ color: "#294fff" }}>
+                {totalRevenue
+                  ? totalRevenue?.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    }) + ""
+                  : "0 đ"}
+              </span>
+            </div>
           </div>
+          {statistic ? (
+            <button
+              onClick={handleStartDayClick}
+              style={{
+                width: "100%",
+                color: "#294fff",
+                fontSize: "20px",
+                display: "flex",
+                justifyContent: "center",
+              }}>
+              Tiếp tục thống kê
+            </button>
+          ) : (
+            <></>
+          )}
+
+          {valEndDay ? (
+            <button
+              onClick={handleStatistic}
+              style={{
+                color: "#294fff",
+                fontSize: "20px",
+                display: statistic ? "none" : "flex",
+                justifyContent: "center",
+                width: "100%",
+              }}>
+              Thống kê
+            </button>
+          ) : (
+            <></>
+          )}
         </Element>
+        <div></div>
       </div>
+      {statistic && deliveredOrdersInfo && (
+        <ChartComponentShop
+          arrData={deliveredOrdersInfo && deliveredOrdersInfo}
+          name="doanh thu"></ChartComponentShop>
+      )}
     </div>
   );
 };

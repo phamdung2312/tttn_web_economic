@@ -22,6 +22,7 @@ function RangeSlider({ onChange }) {
         min={0}
         max={50000000}
         minDistance={100000}
+        step={100000}
         onChange={(value, index) => handleChange(value)}
       />
       <span className="range-slider__valueMax">

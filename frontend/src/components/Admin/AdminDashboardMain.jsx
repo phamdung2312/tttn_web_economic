@@ -10,11 +10,13 @@ import { getAllOrdersOfAdmin } from "../../redux/actions/order";
 import Loader from "../Layout/Loader";
 import { getAllSellers } from "../../redux/actions/sellers";
 import { Element, Link as ScrollLink } from "react-scroll";
-import ChartComponent from "./ChartComponent";
+import ChartComponentAdmin from "./ChartComponentAdmin";
 
 const AdminDashboardMain = () => {
   const [valStartDay, setValStartDay] = useState("");
   const [valEndDay, setValEndDay] = useState("");
+  const [statistic, setStatistic] = useState(false);
+
   const dispatch = useDispatch();
 
   const { adminOrders, adminOrderLoading } = useSelector(
@@ -37,6 +39,10 @@ const AdminDashboardMain = () => {
   const handleStartDayClick = () => {
     setValEndDay("");
     setValStartDay("");
+    setStatistic(false);
+  };
+  const handleStatistic = () => {
+    setStatistic(true);
   };
   const getAllProducts = adminOrders?.filter((item) => {
     const orderDate = new Date(item.deliveredAt?.slice(0, 10));
@@ -46,12 +52,13 @@ const AdminDashboardMain = () => {
       item.status === "Delivered"
     );
   });
+
   //chart
   console.log("getAllProducts", getAllProducts);
   const deliveredOrdersInfo = getAllProducts?.map((order) => {
     return {
       day: order.deliveredAt.slice(0, 10),
-      price: order.totalPrice,
+      total: order.totalPrice,
     };
   });
   console.log("deliveredOrdersInfo", deliveredOrdersInfo);
@@ -310,22 +317,42 @@ const AdminDashboardMain = () => {
                   </span>
                 </div>
               </div>
-              {valEndDay ? (
+              {statistic ? (
                 <button
                   onClick={handleStartDayClick}
-                  style={{ color: "#294fff", fontSize: "20px" }}>
+                  style={{
+                    color: "#294fff",
+                    fontSize: "20px",
+                    display: "flex",
+                    justifyContent: "center",
+                    width: "100%",
+                  }}>
                   Tiếp tục thống kê
+                </button>
+              ) : (
+                <></>
+              )}
+              {valEndDay ? (
+                <button
+                  onClick={handleStatistic}
+                  style={{
+                    color: "#294fff",
+                    fontSize: "20px",
+                    display: statistic ? "none" : "flex",
+                    justifyContent: "center",
+                    width: "100%",
+                  }}>
+                  Thống kê
                 </button>
               ) : (
                 <></>
               )}
             </Element>
           </div>
-          {valEndDay && (
-            <ChartComponent
-              arrData={
-                deliveredOrdersInfo && deliveredOrdersInfo
-              }></ChartComponent>
+          {statistic && (
+            <ChartComponentAdmin
+              arrData={deliveredOrdersInfo && deliveredOrdersInfo}
+              name="doanh thu"></ChartComponentAdmin>
           )}
         </div>
       )}

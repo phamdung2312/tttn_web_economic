@@ -33,10 +33,10 @@ const Payment = () => {
       .create({
         purchase_units: [
           {
-            description: "Sunflower",
+            description: "Thanh toán đơn hàng 4D Market",
             amount: {
               currency_code: "USD",
-              value: orderData?.totalPrice,
+              value: orderData?.totalPrice / 25000,
             },
           },
         ],
@@ -80,7 +80,7 @@ const Payment = () => {
 
     order.paymentInfo = {
       id: paymentInfo.payer_id,
-      status: "succeeded",
+      status: "Đã thanh toán",
       type: "Paypal",
     };
 
@@ -127,7 +127,7 @@ const Payment = () => {
       if (result.error) {
         toast.error(result.error.message);
       } else {
-        if (result.paymentIntent.status === "succeeded") {
+        if (result.paymentIntent.status === "Đã thanh toán") {
           order.paymnentInfo = {
             id: result.paymentIntent.id,
             status: result.paymentIntent.status,
@@ -357,7 +357,7 @@ const PaymentInfo = ({
                   <PayPalScriptProvider
                     options={{
                       "client-id":
-                        "Aczac4Ry9_QA1t4c7TKH9UusH3RTe6onyICPoCToHG10kjlNdI-qwobbW9JAHzaRQwFMn2-k660853jn",
+                        "Afs_f5Gaq6YccxWoRoGg98P5ig31BsJAzHJR5bdj-IfUjRXXuQpRtirZQkWx5KZoCihrk3un4Ff89NCo",
                     }}>
                     <PayPalButtons
                       style={{ layout: "vertical" }}

@@ -28,12 +28,12 @@ const ProductsPage = () => {
   const searchDataFilter = useSelector((state) => state?.search.searchData);
   const searchValue = useSelector((state) => state?.search.searchValue);
   // const searchDataFilter = searchData?.search?.searchData;
-  // console.log("searchValue", searchValue);
-  // console.log("data", data);
-  // console.log("datatemp", datatemp);
-  // console.log("searchDataFilter", searchDataFilter);
-  // console.log("category", category);
-  // console.log("categoryDataTest", categoryData);
+  console.log("searchValue", searchValue);
+  console.log("data", data);
+  console.log("datatemp", datatemp);
+  console.log("searchDataFilter", searchDataFilter);
+  console.log("category", category);
+  console.log("categoryDataTest", categoryData);
 
   const handlePriceChange = (value) => {
     setMinPrice(value[0]);
@@ -159,13 +159,16 @@ const ProductsPage = () => {
       ) : (
         <div>
           <Header activeHeading={3} />
-
-          {/*all method filter */}
           <div
             style={searchDataFilter || categoryData ? { display: "flex" } : {}}
             className="conatainer_input_price bg-gray-100 p-4 rounded-lg shadow-md hidden">
             <div className="conatainer_body_price">
-              <RangeSlider onChange={handlePriceChange} className="w-full" />
+              <label className="conatainer_body_text">Giá: </label>
+              <RangeSlider
+                value={maxPrice}
+                onChange={handlePriceChange}
+                className="w-full"
+              />
             </div>
             <div className="conatainer_body_price">
               <label className="conatainer_body_text">Tỉnh/Thành phố: </label>
@@ -195,15 +198,17 @@ const ProductsPage = () => {
               </select>
             </div>
           </div>
-
-          {/* Name category */}
           <div className={`${styles.section} text-2xl font-semibold pt-2`}>
             <h1>{categoryData}</h1>
           </div>
           <div
             style={searchValue ? { display: "flex" } : {}}
             className={`${styles.section} text-base font-normal pt-2 searchValue`}>
-            <h6>Kết quả tìm kiếm "{searchValue}"</h6>
+            <span>Kết quả tìm kiếm cho từ khóa "</span>{" "}
+            <span style={{ color: "blue", fontWeight: "bold" }}>
+              {searchValue}
+            </span>
+            <span>"</span>
           </div>
           <div className="text-center">
             <p>

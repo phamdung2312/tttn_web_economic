@@ -90,10 +90,7 @@ const ProfileSidebar = ({ setActive, active }) => {
         </span>
       </div>
 
-      <divThay
-        đổi
-        mật
-        khẩu
+      <div
         className="flex items-center cursor-pointer w-full mb-8"
         onClick={() => setActive(6)}>
         <RiLockPasswordLine size={20} color={active === 6 ? "red" : ""} />
@@ -103,7 +100,7 @@ const ProfileSidebar = ({ setActive, active }) => {
           } 800px:block hidden`}>
           Thay đổi mật khẩu
         </span>
-      </divThay>
+      </div>
 
       <div
         className="flex items-center cursor-pointer w-full mb-8"

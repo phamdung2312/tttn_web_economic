@@ -1,28 +1,30 @@
 import Chart from "chart.js/auto";
 import { useEffect } from "react";
 import "chartjs-plugin-datalabels";
-function ChartComponent({ arrData }) {
-  console.log("arrData", arrData);
+
+function ChartComponentShop({ arrData, name }) {
+  console.log("arrDataChart", arrData);
   // biểu đồ
-  const groupedOrders = arrData?.reduce((result, order) => {
-    const day = order.day;
-    const price = order.price;
-    result[day] = (result[day] || 0) + price;
+  const groupedDay = arrData?.reduce((result, order) => {
+    const day = order?.day;
+    const totalData = order?.total;
+    result[day] = (result[day] || 0) + totalData;
     return result;
   }, {});
-  const sumOrders = Object.keys(groupedOrders).map((day) => ({
+  const sumData = Object.keys(groupedDay).map((day) => ({
     day: day,
-    price: groupedOrders[day],
+    totalData: groupedDay[day],
   }));
+  console.log("sumData", sumData);
   useEffect(() => {
     new Chart(document.getElementById("acquisitions"), {
       type: "bar",
       data: {
-        labels: sumOrders.map((row) => row.day),
+        labels: sumData?.map((row) => row.day),
         datasets: [
           {
-            label: "Doanh thu",
-            data: sumOrders.map((row) => row.price),
+            label: name,
+            data: sumData?.map((row) => row.totalData),
           },
         ],
       },
@@ -41,7 +43,7 @@ function ChartComponent({ arrData }) {
   }, [arrData]);
   return (
     <>
-      <h1>Biểu đồ thống kê doanh thu</h1>
+      <h1>Biểu đồ thống kê {name}</h1>
       <div style={{ width: "800px" }}>
         <canvas id="acquisitions"></canvas>
       </div>
@@ -49,4 +51,4 @@ function ChartComponent({ arrData }) {
   );
 }
 
-export default ChartComponent;
+export default ChartComponentShop;

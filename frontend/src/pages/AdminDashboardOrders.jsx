@@ -5,15 +5,15 @@ import { DataGrid } from "@material-ui/data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { backend_url } from "../server";
 import { getAllOrdersOfAdmin } from "../redux/actions/order";
-import ChartComponent from "../components/Admin/ChartComponent";
-import ChartComponentOrder from "../components/Admin/ChartComponentOrder";
 import { AiFillFileExcel } from "react-icons/ai";
 import * as XLSX from "xlsx";
+import ChartComponentAdmin from "../components/Admin/ChartComponentAdmin";
 
 const AdminDashboardOrders = () => {
   const dispatch = useDispatch();
   const [valStartDay, setValStartDay] = useState("");
   const [valEndDay, setValEndDay] = useState("");
+  const [statistic, setStatistic] = useState(false);
 
   const { adminOrders, adminOrderLoading } = useSelector(
     (state) => state.order
@@ -32,7 +32,12 @@ const AdminDashboardOrders = () => {
   const handleStartDayClick = () => {
     setValEndDay("");
     setValStartDay("");
+    setStatistic(false);
   };
+  const handleStatistic = () => {
+    setStatistic(true);
+  };
+
   //export excel
 
   const generateProductColumns = (allOrder) => {
@@ -85,7 +90,7 @@ const AdminDashboardOrders = () => {
   const deliveredOrdersInfo = getAllOrders?.map((order) => {
     return {
       day: order.createdAt.slice(0, 10),
-      totalOder: 1,
+      total: 1,
     };
   });
   console.log("deliveredOrdersInfo", deliveredOrdersInfo);
@@ -260,17 +265,38 @@ const AdminDashboardOrders = () => {
                   paddingBottom: "30px",
                   background: "#ccc",
                 }}>
-                {valEndDay ? (
+                {statistic ? (
                   <button
                     onClick={handleStartDayClick}
-                    style={{ color: "#294fff", fontSize: "20px" }}>
+                    style={{
+                      color: "#294fff",
+                      fontSize: "20px",
+                      display: "flex",
+                      justifyContent: "center",
+                      width: "100%",
+                    }}>
                     Tiếp tục thống kê
                   </button>
                 ) : (
                   <></>
                 )}
+                {valEndDay ? (
+                  <button
+                    onClick={handleStatistic}
+                    style={{
+                      color: "#294fff",
+                      fontSize: "20px",
+                      display: statistic ? "none" : "flex",
+                      justifyContent: "center",
+                      width: "100%",
+                    }}>
+                    Thống kê
+                  </button>
+                ) : (
+                  <></>
+                )}
               </div>
-              {row1 && (
+              {row1 && statistic && (
                 <>
                   <DataGrid
                     rows={row1}
@@ -291,11 +317,10 @@ const AdminDashboardOrders = () => {
                   </div>
                 </>
               )}
-              {valEndDay && (
-                <ChartComponentOrder
-                  arrData={
-                    deliveredOrdersInfo && deliveredOrdersInfo
-                  }></ChartComponentOrder>
+              {statistic && (
+                <ChartComponentAdmin
+                  arrData={deliveredOrdersInfo && deliveredOrdersInfo}
+                  name="đơn hàng"></ChartComponentAdmin>
               )}
             </div>
           </div>

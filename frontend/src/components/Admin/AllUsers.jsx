@@ -10,11 +10,12 @@ import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
 import { backend_url, server } from "../../server";
 import { toast } from "react-toastify";
-import ChartComponentUser from "./ChartComponentUser";
+import ChartComponentAdmin from "./ChartComponentAdmin";
 
 const AllUsers = () => {
   const [valStartDay, setValStartDay] = useState("");
   const [valEndDay, setValEndDay] = useState("");
+  const [statistic, setStatistic] = useState(false);
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
@@ -43,7 +44,12 @@ const AllUsers = () => {
   const handleStartDayClick = () => {
     setValEndDay("");
     setValStartDay("");
+    setStatistic(false);
   };
+  const handleStatistic = () => {
+    setStatistic(true);
+  };
+
   const getAllUser = users?.filter((item) => {
     const orderDate = new Date(item.createdAt.slice(0, 10));
     return (
@@ -56,7 +62,7 @@ const AllUsers = () => {
   const deliveredOrdersInfo = getAllUser?.map((order) => {
     return {
       day: order.createdAt.slice(0, 10),
-      totalOder: 1,
+      total: 1,
     };
   });
   const totalUsers = getAllUser?.length;
@@ -207,38 +213,62 @@ const AllUsers = () => {
               paddingBottom: "30px",
               background: "#ccc",
             }}>
-            {valEndDay ? (
+            {statistic ? (
               <button
                 onClick={handleStartDayClick}
-                style={{ color: "#294fff", fontSize: "20px" }}>
+                style={{
+                  color: "#294fff",
+                  fontSize: "20px",
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                }}>
                 Tiếp tục thống kê
               </button>
             ) : (
               <></>
             )}
+            {valEndDay ? (
+              <button
+                onClick={handleStatistic}
+                style={{
+                  color: "#294fff",
+                  fontSize: "20px",
+                  display: statistic ? "none" : "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                }}>
+                Thống kê
+              </button>
+            ) : (
+              <></>
+            )}
           </div>
-          <DataGrid
-            rows={row1}
-            columns={columns}
-            pageSize={5}
-            disableSelectionOnClick
-            autoHeight
-          />
-          <div
-            style={{
-              fontSize: "20px",
-              fontWeight: "700",
-              padding: "50px",
-              float: "right",
-            }}>
-            <span>Tổng số lượng người dùng: </span>
-            <span style={{ color: "#294fff" }}>{totalUsers}</span>
-          </div>
-          {valEndDay && (
-            <ChartComponentUser
-              arrData={
-                deliveredOrdersInfo && deliveredOrdersInfo
-              }></ChartComponentUser>
+          {statistic && (
+            <DataGrid
+              rows={row1}
+              columns={columns}
+              pageSize={5}
+              disableSelectionOnClick
+              autoHeight
+            />
+          )}
+          {statistic && (
+            <div
+              style={{
+                fontSize: "20px",
+                fontWeight: "700",
+                padding: "50px",
+                float: "right",
+              }}>
+              <span>Tổng số lượng người dùng: </span>
+              <span style={{ color: "#294fff" }}>{totalUsers}</span>
+            </div>
+          )}
+          {statistic && (
+            <ChartComponentAdmin
+              arrData={deliveredOrdersInfo && deliveredOrdersInfo}
+              name="người dùng"></ChartComponentAdmin>
           )}
         </div>
         {open && (

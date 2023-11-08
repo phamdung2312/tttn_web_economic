@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Layout/Header";
 import { useSelector } from "react-redux";
 import socketIO from "socket.io-client";
-import { format } from "timeago.js";
 import { backend_url, server } from "../server";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import { TfiGallery } from "react-icons/tfi";
 import styles from "../styles/styles";
+import moment from "moment";
+import "moment/locale/vi";
 const ENDPOINT = "https://socket-ecommerce-tu68.onrender.com/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
@@ -207,8 +208,10 @@ const UserInbox = () => {
       {!open && (
         <>
           <Header />
-          <h1 className="text-center text-[30px] py-3 font-Poppins"></h1>
-
+          <h1 className="text-center text-[30px] py-3 font-Poppins">
+            Tất cả tin nhắn
+          </h1>
+          {/* All messages list */}
           {conversations &&
             conversations.map((item, index) => (
               <MessageList
@@ -277,8 +280,6 @@ const MessageList = ({
     };
     getUser();
   }, [me, data]);
-  console.log("dataID", data._id);
-  console.log("res.data.shop)", user);
 
   return (
     <div
@@ -299,9 +300,9 @@ const MessageList = ({
           className="w-[50px] h-[50px] rounded-full"
         />
         {online ? (
-          <div className="w-[12px] h-[12px] bg-green-400 rounded-full absolute top-[2px] right-[2px]" />
+          <div className="w-[12px] h-[12px] bg-green-400 rounded-full absolute bottom-[2px] right-[2px]" />
         ) : (
-          <div className="w-[12px] h-[12px] bg-[#c7b9b9] rounded-full absolute top-[2px] right-[2px]" />
+          <div className="w-[12px] h-[12px] bg-[#c7b9b9] rounded-full absolute bottom-[2px] right-[2px]" />
         )}
       </div>
       <div className="pl-3">
@@ -383,7 +384,7 @@ const SellerInbox = ({
                   </div>
 
                   <p className="text-[12px] text-[#000000d3] pt-1">
-                    {format(item.createdAt)}
+                    {moment(item.createdAt).fromNow()}
                   </p>
                 </div>
               )}

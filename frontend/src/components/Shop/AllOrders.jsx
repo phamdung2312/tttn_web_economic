@@ -10,10 +10,13 @@ import { AiOutlineArrowRight } from "react-icons/ai";
 import { AiFillFileExcel } from "react-icons/ai";
 import "./AllOrder.css";
 import * as XLSX from "xlsx";
+import ChartComponentShop from "./ChartComponentShop";
 
 const AllOrders = () => {
   const [valStartDay, setValStartDay] = useState("");
   const [valEndDay, setValEndDay] = useState("");
+  const [statistic, setStatistic] = useState(false);
+
   const { orders, isLoading } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
   const clearRef = useRef();
@@ -26,6 +29,14 @@ const AllOrders = () => {
   };
   const handleEndDayChange = (e) => {
     setValEndDay(e.target.value);
+  };
+  const handleStartDayClick = () => {
+    setValEndDay("");
+    setValStartDay("");
+    setStatistic(false);
+  };
+  const handleStatistic = () => {
+    setStatistic(true);
   };
   //export excel
 
@@ -76,6 +87,15 @@ const AllOrders = () => {
   });
 
   const totalOrders = getAllOrders?.length;
+  //chart;
+  const deliveredOrdersInfo = getAllOrders?.map((order) => {
+    return {
+      day: order.createdAt.slice(0, 10),
+      total: 1,
+    };
+  });
+  console.log("deliveredOrdersInfo", deliveredOrdersInfo);
+  console.log("getAllOrders", getAllOrders);
 
   const columns = [
     {
@@ -219,35 +239,69 @@ const AllOrders = () => {
           </button>
           <div
             style={{
-              display: "flex",
-              justifyContent: "space-between",
               padding: "20px",
               background: "#ccc",
             }}>
-            <h1 style={{ fontSize: "20px", fontWeight: "700" }}>
-              Thống kê đơn hàng ----
-            </h1>
-            <div>
-              <label>Ngày bắt đầu: </label>
-              <input
-                style={{ border: "1px solid black" }}
-                value={valStartDay}
-                ref={clearRef}
-                type="date"
-                onChange={handleStartDayChange}></input>
-              <label style={{ marginLeft: "50px" }}>Ngày kết thúc: </label>
-              <input
-                style={{ border: "1px solid black" }}
-                className="border border-solid border-red-500"
-                type="date"
-                value={valEndDay}
-                ref={clearRef}
-                onChange={handleEndDayChange}></input>
-              {/* <button onClick={handleSubmit}>Thống kê</button> */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}>
+              <h1 style={{ fontSize: "20px", fontWeight: "700" }}>
+                Thống kê đơn hàng ----
+              </h1>
+              <div>
+                <label>Ngày bắt đầu: </label>
+                <input
+                  style={{ border: "1px solid black" }}
+                  value={valStartDay}
+                  ref={clearRef}
+                  type="date"
+                  onChange={handleStartDayChange}></input>
+                <label style={{ marginLeft: "50px" }}>Ngày kết thúc: </label>
+                <input
+                  style={{ border: "1px solid black" }}
+                  className="border border-solid border-red-500"
+                  type="date"
+                  value={valEndDay}
+                  ref={clearRef}
+                  onChange={handleEndDayChange}></input>
+                {/* <button onClick={handleSubmit}>Thống kê</button> */}
+              </div>
             </div>
+            {statistic ? (
+              <button
+                onClick={handleStartDayClick}
+                style={{
+                  color: "#294fff",
+                  fontSize: "20px",
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                }}>
+                Tiếp tục thống kê
+              </button>
+            ) : (
+              <></>
+            )}
+            {valEndDay ? (
+              <button
+                onClick={handleStatistic}
+                style={{
+                  color: "#294fff",
+                  fontSize: "20px",
+                  display: statistic ? "none" : "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                }}>
+                Thống kê
+              </button>
+            ) : (
+              <></>
+            )}
           </div>
 
-          {row1 && (
+          {row1 && statistic && (
             <>
               <DataGrid
                 rows={row1}
@@ -267,6 +321,11 @@ const AllOrders = () => {
                 <span style={{ color: "#294fff" }}>{totalOrders}</span>
               </div>
             </>
+          )}
+          {statistic && (
+            <ChartComponentShop
+              arrData={deliveredOrdersInfo && deliveredOrdersInfo}
+              name=" đơn hàng"></ChartComponentShop>
           )}
         </div>
       )}
